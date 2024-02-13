@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Group Code</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js" integrity="sha512-8RnEqURPUc5aqFEN04aQEiPlSAdE0jlFS/9iGgUyNtwFnSKCXhmB6ZTNl7LnDtDWKabJIASzXrzD0K+LYexU9g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css" integrity="sha512-uf06llspW44/LZpHzHT6qBOIVODjWtv4MxCricRxkzvopAlSWnTf6hpZTFxuuZcuNE9CBQhqE0Seu1CoRk84nQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/isotope.min.css" integrity="sha512-5QfxfU2pxxWqMfmJGYivSJXujFi/3lk4MTaMdzO9jEs7pXw30xlDaKkICpFRN954vGq+wIg2ZpxSGjMjg6oQlQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/edit/closebrackets.min.js" integrity="sha512-tsjcYO5hFvViRssxiM7Jhd8601epWOx1He3Hl4yuI5dKKPxr43KxkOhc9GZeeqzlYJm9ABb7UPA9697NiqZZ7Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js" integrity="sha512-I6CdJdruzGtvDyvdO4YsiAq+pkWf2efgd1ZUSK2FnM/u2VuRASPC7GowWQrWyjxCZn6CT89s3ddGI+be0Ak9Fg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.js" integrity="sha512-tE1z+95+lMCGwy+9PnKgUSIeHhvioC9lMlI7rLWU0Ps3XTdjRygLcy4mLuL0JAoK4TLdQEyP0yOl/9dMOqpH/Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    </head>
+    <body style="background-color:Black;">
+        <button id="run-code" style="background-color: rgb(24, 193, 187);">Execute</button>
+        <textarea id="editor"></textarea>
+        
+        <script>
+            let editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
+                mode: "javascript",
+                theme: "isotope",
+                lineNumbers: true,
+                autoCloseBrackets: true,
+                autofocus: true,
+            });
+
+            let width = window.width
+            editor.setSize(width,"920")
+
+            let RunCode = document.getElementById("run-code");
+            RunCode.addEventListener("click", function() {
+                let code = editor.getValue();
+                try {
+                    let result = eval(code);
+                    console.log(result);
+                } catch (error) {
+                    console.error(error);
+                }
+            });
+
+            const socket = io();
+
+            socket.on('NewCode', (code) => {
+                editor.setValue(code)
+                //console.log(code)
+            });
+
+            editor.on('change', (instance, changes) => {
+                const { origin } = changes;
+                
+                //console.log(changes)
+                //console.log({origin})
+              
+                if ( origin !== 'setValue') {
+                    socket.emit('ChangedCode', instance.getValue())
+                }
+            });
+
+        </script>
+    </body>
+</html>

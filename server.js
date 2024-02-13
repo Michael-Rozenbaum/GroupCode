@@ -3,11 +3,11 @@ const app = express();
 const Server = require('http').createServer(app);
 const io = require('socket.io')(Server);
 
-app.get('/', function(req, res) {
-  res.sendFile(__dirname + '/public/index.html');
-});
+const port = 3000; 
 
-app.use(express.static('public'));
+app.get('/', function(req, res) {
+  res.sendFile(__dirname + '/index.html');
+});
 
 io.on('connection', (socket) => {
     console.log('a user connected');
@@ -18,6 +18,6 @@ io.on('connection', (socket) => {
 
 });
 
-Server.listen(3000, () => {
-    console.log('Server is running on port:3000');
+Server.listen(port, () => {
+    console.log(`Server is running on port: ${port}`);
 });

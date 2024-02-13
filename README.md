@@ -1,9 +1,8 @@
-# GroupCode
-Synchronous Code Editor (for JavaScript) accessible on multiple devices
+Synced Group Code Editor  
 
-To run the code you will need to have Node.js installed.
-To start the Server, type "node server.js" into the terminal.
+To download the required dependencies, type "npm i" in terminal.
+Then start the server by typing "node server" in the terminal.
 Clients will need to be connected to the same network as the Server.
 To access the editor as a client, type http://localhost:3000/ into any browser.
-To access it on another devices, follow the same instructions as the line above.
-The editor can execute JavaScript using the built in webconsole on whatever browser you're using.
+Changes made in the editor will be synced and visible to all connected clients in real time.
+The editor is set to JavaScript, clicking execute will run the code in the Browser Dev Tools Console.
